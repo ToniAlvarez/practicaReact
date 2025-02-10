@@ -1,12 +1,10 @@
 const API_URL = "https://api.rawg.io/api/games";  // URL base de la API de RAWG
-const API_KEY = "b52f494888cc42fb87e0ce2efc3dc482";  // Reemplaza esto con tu clave API, si es necesario
+const API_KEY = "76ac78a549374ba6b2bbc109a37470eb";  
 
-// Función genérica para hacer solicitudes a la API
 const fetchFromApi = async (endpoint, params = {}) => {
   const url = new URL(endpoint, API_URL);  // Crea la URL completa
   url.searchParams.append("key", API_KEY);  // Si necesitas una clave API, la añadimos a la URL
 
-  // Añadir parámetros adicionales a la URL
   Object.keys(params).forEach((key) => url.searchParams.append(key, params[key]));
 
   try {

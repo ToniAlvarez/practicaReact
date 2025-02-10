@@ -5,16 +5,15 @@ import Navbar from "./components/Navbar";
 import PopularGamesSlider from "./components/Slider";
 
 const AppContent = () => {
-  const location = useLocation(); // Detecta la ruta actual
+  const location = useLocation(); 
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-slate-400 text-white">
       <Navbar />
-      {/* Muestra el slider solo en la página de inicio */}
+
       {location.pathname === "/" && <PopularGamesSlider />}
 
       <Routes>
-        <Route path="/" element={<PopularGamesSlider />} />
         <Route path="/videojuegos" element={<Videojuegos />} />
         <Route path="/game/:id" element={<GameDetail />} />
       </Routes>

@@ -8,14 +8,7 @@
 }
 
 body{
-  background-color: #121212;
+  background-color: #1f1c1c;
 }
-#root {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 2rem;
-    text-align: center;
-    background-color: #282828;
-    border-radius: 0.8rem;
-  }
+
   
