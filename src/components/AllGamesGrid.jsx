@@ -1,47 +1,29 @@
 // src/components/AllGamesGrid.jsx
-import { useEffect, useState } from "react";
-import { fetchAllGames } from "../services/api";
-import { Link } from "react-router-dom";
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchGamesThunk } from '../store/gamesSlice';
 
 const AllGamesGrid = () => {
-  const [games, setGames] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const dispatch = useDispatch();
+  const { gamesList, status } = useSelector((state) => state.games);
 
   useEffect(() => {
-    const loadGames = async () => {
-      try {
-        const allGames = await fetchAllGames();
-        setGames(allGames);
-      } catch (err) {
-        setError("Error al cargar los juegos");
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadGames();
-  }, []);
+    if (status === 'idle') {
+      dispatch(fetchGamesThunk());
+    }
+  }, [status, dispatch]);
 
-  if (loading) return <div className="text-teal-300 text-center py-8">Cargando...</div>;
-  if (error) return <div className="text-red-500 text-center py-8">{error}</div>;
+  if (status === 'loading') return <div>Cargando...</div>;
+  if (status === 'failed') return <div>Error al cargar los juegos.</div>;
 
   return (
-    <div className="container mx-auto px-6 py-8">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {games.map((game) => (
-          <Link to={`/game/${game.id}`} key={game.id} className="bg-gray-800 p-4 rounded-lg shadow-lg hover:bg-gray-700 transition">
-            <img 
-              src={game.background_image || "/placeholder.svg"} 
-              alt={game.name} 
-              className="w-full h-40 object-cover rounded-lg" 
-              loading="lazy"
-            />
-            <h3 className="text-xl text-teal-300 font-semibold mt-2">{game.name}</h3>
-            <p className="text-gray-400">⭐ {game.rating}</p>
-            <p className="text-gray-500">{game.genres.map(g => g.name).join(", ")}</p>
-          </Link>
-        ))}
-      </div>
+    <div className="grid grid-cols-3 gap-4">
+      {gamesList.map((game) => (
+        <div key={game.id} className="p-4 bg-gray-800 rounded-lg">
+          <h2 className="text-lg font-bold">{game.name}</h2>
+          <img src={game.background_image} alt={game.name} className="w-full h-48 object-cover rounded-lg" />
+        </div>
+      ))}
     </div>
   );
 };

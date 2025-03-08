@@ -1,5 +1,5 @@
 // src/pages/Videojuegos.jsx
-import AllGamesGrid from "../AllGamesGrid";
+import AllGamesGrid from "../components/AllGamesGrid";
 
 const Videojuegos = () => {
   return (
