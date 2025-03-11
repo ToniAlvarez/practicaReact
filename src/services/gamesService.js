@@ -1,13 +1,16 @@
-// src/services/gamesService.js
-export const fetchGames = () => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve([
-          { id: 1, name: "Game 1", background_image: "game1.jpg", description_raw: "Descripcion del juego 1" },
-          { id: 2, name: "Game 2", background_image: "game2.jpg", description_raw: "Descripcion del juego 2" },
-          { id: 3, name: "Game 3", background_image: "game3.jpg", description_raw: "Descripcion del juego 3" },
-        ]);
-      }, 500);
-    });
-  };
-  
+const API_KEY = "abedc4b6103648bda6daaafceef2d414";
+const API_URL = "https://api.rawg.io/api/games";
+
+export const fetchGames = async () => {
+  try {
+    const response = await fetch(`${API_URL}?key=${API_KEY}&ordering=-rating&page_size=10`);
+    if (!response.ok) {
+      throw new Error(`Error al obtener juegos: ${response.status}`);
+    }
+    const data = await response.json();
+    return data.results; 
+  } catch (error) {
+    console.error("Error al obtener juegos:", error);
+    return []; 
+  }
+};

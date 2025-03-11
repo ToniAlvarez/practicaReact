@@ -1,9 +1,10 @@
-const API_URL = "https://api.rawg.io/api/games";  // URL base de la API de RAWG
-const API_KEY = "76ac78a549374ba6b2bbc109a37470eb";  
+const API_URL = "https://api.rawg.io/api/games";  
+const API_KEY = "abedc4b6103648bda6daaafceef2d414";  
 
-const fetchFromApi = async (endpoint, params = {}) => {
-  const url = new URL(endpoint, API_URL);  // Crea la URL completa
-  url.searchParams.append("key", API_KEY);  // Si necesitas una clave API, la añadimos a la URL
+export const fetchFromApi = async (endpoint, params = {}) => {
+  const url = new URL(endpoint, API_URL); 
+  
+  url.searchParams.append("key", API_KEY); 
 
   Object.keys(params).forEach((key) => url.searchParams.append(key, params[key]));
 
@@ -16,30 +17,34 @@ const fetchFromApi = async (endpoint, params = {}) => {
     return data;
   } catch (error) {
     console.error("API Error:", error);
-    return null;  // Si hay un error, retornamos null
+    return null;  
   }
 };
 
 // Función para obtener los juegos populares
 export const fetchPopularGames = async () => {
   const params = {
-    ordering: "-added", // Ordenar por los más populares
-    page_size: 10,      // Limitar a 10 juegos populares
+    ordering: "-added", 
+    page_size: 10,      
   };
   const data = await fetchFromApi("/games", params);
-  return data ? data.results : [];  // Si la respuesta tiene resultados, retornamos los juegos, si no, retornamos un array vacío
+  return data ? data.results : []; 
 };
 
 export const fetchAllGames = async () => {
   try {
-    const response = await fetch(`${API_URL}?key=${API_KEY}`);
+    const url = `${API_URL}?key=${API_KEY}&ordering=-rating&page_size=10`;
+    console.log("Fetching games from URL:", url); 
+
+    const response = await fetch(url);
     if (!response.ok) {
-      throw new Error("Error al obtener los juegos");
+      throw new Error(`Error al obtener juegos: ${response.status}`);
     }
+
     const data = await response.json();
-    return data.results; // Devolvemos solo la lista de juegos
+    return data.results;
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error al obtener juegos:", error);
     return [];
   }
 };

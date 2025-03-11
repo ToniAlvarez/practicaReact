@@ -44,7 +44,7 @@ const PopularGamesSlider = () => {
 
   return (
     <div className="relative container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6 text-indigo-950">Los juegos más vendidos</h1>
+      <h1 className="text-2xl font-bold mb-6 text-white">Los juegos más vendidos</h1>
 
       <div className="relative w-full" style={{ height: "60vh" }}>
         <div className="relative w-full h-full">

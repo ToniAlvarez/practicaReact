@@ -1,12 +1,10 @@
-// src/store/gamesSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchGames } from "../services/gamesService";
+import { fetchAllGames } from "../services/api";  
 
 export const fetchGamesThunk = createAsyncThunk(
   "games/fetchGames",
   async () => {
-    const response = await fetchGames();
-    return response;
+    return await fetchAllGames();  
   }
 );
 
@@ -14,10 +12,23 @@ const gamesSlice = createSlice({
   name: "games",
   initialState: {
     gamesList: [],
+    favoritos: JSON.parse(localStorage.getItem("favoritos")) || [], // Cargar favoritos desde localStorage
     status: "idle",
     error: null,
   },
-  reducers: {},
+  reducers: {
+    addFavorite: (state, action) => {
+      const game = action.payload;
+      if (!state.favoritos.some((fav) => fav.id === game.id)) {
+        state.favoritos.push(game);
+        localStorage.setItem("favoritos", JSON.stringify(state.favoritos)); 
+      }
+    },
+    removeFavorite: (state, action) => {
+      state.favoritos = state.favoritos.filter((game) => game.id !== action.payload);
+      localStorage.setItem("favoritos", JSON.stringify(state.favoritos)); 
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchGamesThunk.pending, (state) => {
@@ -25,7 +36,7 @@ const gamesSlice = createSlice({
       })
       .addCase(fetchGamesThunk.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.gamesList = action.payload;
+        state.gamesList = action.payload;  
       })
       .addCase(fetchGamesThunk.rejected, (state, action) => {
         state.status = "failed";
@@ -34,4 +45,6 @@ const gamesSlice = createSlice({
   },
 });
 
+// 🔹 Exporta las acciones correctamente
+export const { addFavorite, removeFavorite } = gamesSlice.actions;
 export default gamesSlice.reducer;
